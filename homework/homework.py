@@ -67,10 +67,11 @@ import gzip
 import json
 import os
 import pickle
- 
+import sklearn
 import pandas as pd
 from sklearn.base import clone
 from sklearn.compose import ColumnTransformer
+
 from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
@@ -211,3 +212,16 @@ with open("files/output/metrics.json", "w", encoding="utf-8") as file:
 print(f"Mejor k (SelectKBest): {model.best_params_['feature_selection__k']}")
 for record in metrics:
     print(record)
+
+import pickle
+
+# 1. Cargar tu modelo guardado
+with gzip.open("files/models/model.pkl.gz", 'rb') as archivo:
+    modelo = pickle.load(archivo)
+
+# 2. Consultar el atributo oculto de versión
+try:
+    print(f"El modelo fue entrenado con scikit-learn versión: {modelo.__sklearn_version__}")
+except AttributeError:
+    print("Este objeto no tiene el atributo de versión guardado.")
+print(sklearn.__version__)
